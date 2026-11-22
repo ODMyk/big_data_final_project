@@ -1,0 +1,29 @@
+services:
+  spark:
+    image: docker.io/apache/spark:4.2.0
+    container_name: spark_app
+    command: tail -f /dev/null
+    mem_limit: 12g
+    volumes:
+      - ./:/opt/spark/work
+      - ./artifacts:/artifacts
+      - ./spark-events:/tmp/spark-events
+      - ./conf/spark-defaults.conf:/opt/spark/conf/spark-defaults.conf:ro
+    working_dir: /opt/spark/work
+    ports:
+      - "4040:4040"
+
+  history-server:
+    image: apache/spark:4.2.0
+    container_name: spark_history_server
+    mem_limit: 1g
+    environment:
+      - SPARK_NO_DAEMONIZE=true
+    command: /opt/spark/sbin/start-history-server.sh
+    volumes:
+      - ./spark-events:/tmp/spark-events
+      - ./conf/spark-defaults.conf:/opt/spark/conf/spark-defaults.conf:ro
+    ports:
+      - "18080:18080"
+    depends_on:
+      - spark
