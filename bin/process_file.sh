@@ -9,4 +9,4 @@ mkdir -p "./artifacts" "./spark-events"
 docker compose exec -T \
   -e INPUT_CSV="$INPUT_CSV" \
   -e OUTPUT_DIR="$OUTPUT_DIR" \
-  spark /opt/spark/bin/spark-submit /opt/spark/work/src/pipeline.py
+  spark /opt/spark/bin/spark-submit /opt/spark/work/pipeline.py

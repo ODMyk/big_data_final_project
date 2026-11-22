@@ -23,11 +23,17 @@ COPY (
 ## 2. Структура репозиторію
 
 - `docker-compose.yml` — інфраструктура Spark та History Server із зафіксованими версіями образів.
-- `conf/spark-defaults.conf` — конфігурація Spark
 - `bin/process_file.sh` — скрипт запуску аналізу
 - `bin/make_sample.py` — генерація детермінованої вибірки з повного датасету.
+- `bin/run_benchmark.py` — скрипт автоматизованого бенчмаркінгу (прогрів + 3 заміри) зі збором метрик зі Spark History Server.
 - `pipeline.py` — реалізація багатоетапного пайплайну на PySpark.
-- `artifacts/full_run/` — журнали подій Spark (event logs) і результати повного запуску.
+- `pipeline_cached.py` — оптимізована експериментальна версія конвеєра з кешуванням `StorageLevel.MEMORY_AND_DISK`.
+- `conf/` — конфігурація Spark
+- `data/` — вхідні дані.
+- `logs/` — збережені логи певних запусків.
+- `spark-events/` — журнали подій Spark (event logs).
+- `artifacts/` — результати запусків.
+- `docs/` — вихідні файли звіту, презентації та заяви.
 
 ## 3. Команди запуску
 
@@ -49,13 +55,19 @@ python3 bin/make_sample.py \
 ### Запуск на вибірці (очікуваний час: 1-2 хвилини)
 
 ```bash
-./bin/process_file.sh /data/yellow_tripdata_sample.csv
+./bin/process_file.sh data/yellow_tripdata_sample.csv
 ```
 
 ### Запуск на повному датасеті
 
 ```bash
-./bin/process_file.sh /data/yellow_tripdata_12m.csv
+./bin/process_file.sh data/yellow_tripdata_12m.csv artifacts/full
+```
+
+### Порівняльний бенчмаркінг (Baseline vs Cached)
+
+```bash
+./bin/run_benchmark.py
 ```
 
 ## 4. Очікуваний результат
